@@ -1,11 +1,11 @@
 {
-  "name": "goit-advanced-hw-04",
+  "name": "goit-advancedjs-hw-04",
   "private": true,
   "version": "0.0.0",
   "type": "module",
   "scripts": {
     "dev": "vite",
-    "build": "vite build --base=/goit-advanced-hw-04/",
+    "build": "vite build --base=/goit-advancedjs-hw-04/",
     "preview": "vite preview"
   },
   "devDependencies": {
