@@ -13,6 +13,13 @@ const TOAST_DEFAULT_OPTIONS = {
 const formElement = document.querySelector('.search-form');
 const galleryWrapElement = document.querySelector('.gallery');
 const loaderElement = document.querySelector('.loader');
+const endTextElement = document.querySelector('.end_text');
+
+const simpleLight = new SimpleLightbox('.gallery a', {
+  captionSelector: 'img',
+  captionsData: 'alt',
+  captionDelay: 250,
+});
 
 let searchQuery = '';
 let totalPictures = 0;
@@ -30,20 +37,25 @@ formElement.addEventListener('submit', async event => {
   event.target.elements.searchQuery.value = '';
   galleryWrapElement.innerHTML = '';
   loaderElement.classList.remove('hide');
+  endTextElement.classList.add('hide');
   try {
-    const { hits: pictures, total } = await getPictures({ searchQuery, page });
+    const { hits: pictures, totalHits } = await getPictures({
+      searchQuery,
+      page,
+    });
     if (!pictures.length) {
       iziToast.show({
         ...TOAST_DEFAULT_OPTIONS,
         message: `We're sorry, but images to your request didn't find.`,
         color: '#ef5350',
       });
+      return;
     }
-    totalPictures = total;
+    totalPictures = totalHits;
     renderGallery(createListOfPictures(pictures), true);
     iziToast.show({
       ...TOAST_DEFAULT_OPTIONS,
-      message: `Hooray! We found ${totalPictures} images.`,
+      message: `Hooray! We found ${totalPictures} totalHits images.`,
       color: '#7dc67d',
     });
   } catch (error) {
@@ -62,11 +74,10 @@ function renderGallery(picturesTemplate, isNewSearch = false) {
     : galleryWrapElement.insertAdjacentHTML('beforeend', picturesTemplate);
 
   io.observe(galleryWrapElement.lastElementChild);
-  new SimpleLightbox('.gallery a', {
-    captionSelector: 'img',
-    captionsData: 'alt',
-    captionDelay: 250,
-  });
+  simpleLight.refresh();
+
+  galleryWrapElement.childElementCount === totalPictures &&
+    endTextElement.classList.remove('hide');
 }
 
 function createListOfPictures(pictures) {
@@ -86,10 +97,10 @@ function createListOfPictures(pictures) {
             <img src="${webformatURL}" alt="${tags}" loading="lazy" height="220" />
             </a>
             <div class="info">
-              <p class="info-item"><b>Likes</b> ${likes}</p>
-              <p class="info-item"><b>Views</b> ${views}</p>
-              <p class="info-item"><b>Comments</b> ${comments}</p>
-              <p class="info-item"><b>Downloads</b> ${downloads}</p>
+              <p class="info-item"><b>Likes</b> <span>${likes}</<span></p>
+              <p class="info-item"><b>Views</b> <span>${views}</<span></p>
+              <p class="info-item"><b>Comments</b> <span>${comments}</<span></p>
+              <p class="info-item"><b>Downloads</b> <span>${downloads}</<span></p>
             </div>
         </li>
   `

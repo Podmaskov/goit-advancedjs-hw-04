@@ -6,7 +6,6 @@ ul {
   list-style: none;
   padding: 0;
   margin: 0;
-  height: 100vh;
 }
 
 img {
@@ -97,9 +96,20 @@ img {
 
 .info {
   display: flex;
+  justify-content: space-between;
+  padding: 0 8px;
+  gap: 8px;
 }
 
 .info-item {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+}
+
+.end_text {
+  font-size: 28;
+  font-weight: 700;
   text-align: center;
 }
 
